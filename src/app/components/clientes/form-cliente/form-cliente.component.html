@@ -1,0 +1,80 @@
+<div class="card mt-5">
+  <div class="card-header">{{ tituloForm }}</div>
+  <div class="card-body">
+    <form [formGroup]="clienteForm" autocomplete="off">
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            [class.is-invalid]="validateControlForm('nombre')"
+          />
+          <small
+            class="text-form text-danger"
+            *ngIf="validateControlForm('nombre')"
+            >Campo requerido</small
+          >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2">apellido</label>
+        <div class="col-sm-6">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="apellido"
+            [class.is-invalid]="validateControlForm('apellido')"
+          />
+          <small
+            class="text-form text-danger"
+            *ngIf="validateControlForm('apellido')"
+            >Campo requerido</small
+          >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2">Email</label>
+        <div class="col-sm-6">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="email"
+            [class.is-invalid]="validateControlForm('email')"
+          />
+          <small
+            class="text-form text-danger"
+            *ngIf="validateControlForm('email')"
+            >Campo requerido</small
+          >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-2 col-form-label">&nbsp;</label>
+        <div class="input-group col-sm-6">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-block"
+            (click)="saveForm()"
+            *ngIf="!cliente"
+          >
+            Guardar
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-block"
+            (click)="actualizarCliente()"
+            *ngIf="cliente"
+          >
+            Actualizar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="alert alert-success" role="alert" *ngIf="isSend">
+      {{ mensaje }}
+    </div>
+  </div>
+</div>

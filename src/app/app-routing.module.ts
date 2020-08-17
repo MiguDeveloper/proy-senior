@@ -1,16 +1,19 @@
-import { ClientesComponent } from "./components/clientes/clientes.component";
-import { HomeComponent } from "./components/home/home.component";
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { FormClienteComponent } from './components/clientes/form-cliente/form-cliente.component';
+import { ClientesComponent } from './components/clientes/clientes.component';
+import { HomeComponent } from './components/home/home.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: "home", component: HomeComponent },
-  { path: "clientes", component: ClientesComponent },
-  { path: "**", pathMatch: "full", redirectTo: "home" },
+  { path: 'home', component: HomeComponent },
+  { path: 'clientes', component: ClientesComponent },
+  { path: 'form-cliente', component: FormClienteComponent },
+  { path: 'clientes/:id', component: FormClienteComponent },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

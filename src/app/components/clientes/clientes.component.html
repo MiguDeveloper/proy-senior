@@ -1,0 +1,35 @@
+<div class="row mt-2">
+  <div class="col-md-12">
+    <h3>Lista de clientes</h3>
+    <hr />
+    <button class="btn btn-rounded btn-primary mb-2" type="button" [routerLink]="['/form-cliente']">Crear cliente</button>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">Email</th>
+          <th scope="col">Fecha creación</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.apellido }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.createAt | date: "dd/MM/yyyy" }}</td>
+          <td>            
+            <i
+              class="fa fa-pencil-square-o ml-1"
+              (click)="verDetalleCliente(cliente.id)"
+            ></i>
+            <i class="fa fa-trash-o ml-1"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
