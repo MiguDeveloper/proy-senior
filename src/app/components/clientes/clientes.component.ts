@@ -30,10 +30,10 @@ export class ClientesComponent implements OnInit {
     this.router.navigate(['clientes', id]);
   }
 
-  deleteCliente(id: number) {
+  deleteCliente(cliente: Cliente) {
     swal.fire({
       title: 'Está seguro?',
-      text: 'Se eliminara el cliente seleccionado!',
+      text: `Se eliminara el cliente ${cliente.nombre}`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -41,7 +41,7 @@ export class ClientesComponent implements OnInit {
       confirmButtonText: 'Si, borrar!'
     }).then((result) => {
       if (result.value) {
-        this.clienteService.deleteCliente(id).subscribe(
+        this.clienteService.deleteCliente(cliente.id).subscribe(
           rpta => {
             if (rpta.isSuccess) {
               if (!rpta.isWarning) {
