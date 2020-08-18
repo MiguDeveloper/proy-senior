@@ -3,6 +3,7 @@ import { Cliente } from './../../../models/cliente';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-cliente',
@@ -12,9 +13,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class FormClienteComponent implements OnInit {
 
   clienteForm: FormGroup;
-  mensaje: string;
-  isSend = false;
-  idCliente: number;
   cliente: Cliente;
   tituloForm = 'Crear cliente';
 
@@ -27,12 +25,12 @@ export class FormClienteComponent implements OnInit {
   ngOnInit(): void {
     this.createForm();
     this.route.params.subscribe(params => {
-      this.idCliente = params['id'];
-      if (this.idCliente) {
-        this.cargarCliente(this.idCliente);
+      const idCliente = params['id'];
+      if (idCliente) {
+        this.cargarCliente(idCliente);
         this.tituloForm = 'Actualizar datos cliente';
       }
-    })
+    });
   }
 
   validateControlForm(nameControl: string) {
@@ -61,18 +59,21 @@ export class FormClienteComponent implements OnInit {
       cliente.email = this.clienteForm.get('email').value;
 
       this.clienteService.saveCliente(cliente).subscribe(
-        (rpta: any) => {
+        (rpta) => {
           if (rpta.isSuccess) {
             if (!rpta.isWarning) {
-              this.isSend = true;
-              this.mensaje = rpta.message;
               this.clienteForm.reset();
               this.router.navigate(['/clientes']);
-            } else {
-              console.log(rpta.message);
+              swal.fire('Muy bien', rpta.message, 'success');
             }
-          } else {
-            console.log(rpta.message);
+          }
+        },
+        error => {
+          if (error.status === 400) {
+            swal.fire('Error', error.error.message, 'error');
+          }
+          if (error.status === 404) {
+            swal.fire('Error', error.error.message, 'error');
           }
         }
       );
@@ -84,7 +85,7 @@ export class FormClienteComponent implements OnInit {
   cargarCliente(id: number) {
     if (id) {
       this.clienteService.getClienteById(id).subscribe(
-        (rpta: any) => {
+        (rpta) => {
           if (rpta.isSuccess) {
             if (!rpta.isWarning) {
               this.cliente = rpta.data;
@@ -110,9 +111,22 @@ export class FormClienteComponent implements OnInit {
       this.cliente.nombre = this.clienteForm.get('nombre').value;
       this.cliente.apellido = this.clienteForm.get('apellido').value;
       this.cliente.email = this.clienteForm.get('email').value;
-      this.clienteService.putCliente(this.cliente.id, this.cliente).subscribe(
-        (rpta: any) => {
-          console.log(rpta.cliente);
+      this.clienteService.putCliente(this.cliente).subscribe(
+        rpta => {
+          if (rpta.isSuccess) {
+            this.router.navigate(['/clientes']);
+            if (!rpta.isWarning) {
+              swal.fire('Muy bien', rpta.message, 'success')
+            }
+          }
+        },
+        error => {
+          if (error.status === 400) {
+            swal.fire('Error', error.error.message, 'error');
+          }
+          if (error.status === 404) {
+            swal.fire('Error', error.error.message, 'error');
+          }
         }
       );
     }

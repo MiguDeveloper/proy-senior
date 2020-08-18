@@ -1,3 +1,4 @@
+import { ClienteResponse } from './../models/cliente-response';
 import { Cliente } from './../models/cliente';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -17,15 +18,23 @@ export class ClienteService {
     return this.httpCliente.get<Cliente[]>(this.urlBase);
   }
 
-  saveCliente(cliente: Cliente): Observable<Cliente> {
-    return this.httpCliente.post<Cliente>(this.urlBase, cliente, { headers: this.httpHeaders });
+  saveCliente(cliente: Cliente): Observable<ClienteResponse> {
+    return this.httpCliente.post<ClienteResponse>(this.urlBase,
+      cliente,
+      { headers: this.httpHeaders });
   }
 
-  getClienteById(id: number): Observable<Cliente> {
-    return this.httpCliente.get<Cliente>(`${this.urlBase}/${id}`);
+  getClienteById(id: number): Observable<ClienteResponse> {
+    return this.httpCliente.get<ClienteResponse>(`${this.urlBase}/${id}`);
   }
 
-  putCliente(id: number, cliente: Cliente): Observable<Cliente> {
-    return this.httpCliente.put<Cliente>(`${this.urlBase}/${id}`, cliente);
+  putCliente(cliente: Cliente): Observable<ClienteResponse> {
+    return this.httpCliente.put<ClienteResponse>(`${this.urlBase}/${cliente.id}`,
+      cliente,
+      { headers: this.httpHeaders });
+  }
+
+  deleteCliente(id: number): Observable<ClienteResponse> {
+    return this.httpCliente.delete<ClienteResponse>(`${this.urlBase}/${id}`);
   }
 }
