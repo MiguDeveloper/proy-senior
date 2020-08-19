@@ -15,6 +15,7 @@ export class FormClienteComponent implements OnInit {
   clienteForm: FormGroup;
   cliente: Cliente;
   tituloForm = 'Crear cliente';
+  msgsValidacion: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -70,6 +71,7 @@ export class FormClienteComponent implements OnInit {
         },
         error => {
           if (error.status === 400) {
+            this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
           }
           if (error.status === 404) {
@@ -92,15 +94,12 @@ export class FormClienteComponent implements OnInit {
               this.clienteForm.get('nombre').setValue(this.cliente.nombre);
               this.clienteForm.get('apellido').setValue(this.cliente.apellido);
               this.clienteForm.get('email').setValue(this.cliente.email);
-            } else {
-              console.log(rpta.message);
             }
-          } else {
-            console.log(rpta.message);
           }
         },
         error => {
-          console.log(error);
+          this.router.navigate(['/clientes']);
+          swal.fire('Error', error.error.message, 'error');
         }
       );
     }
@@ -116,15 +115,17 @@ export class FormClienteComponent implements OnInit {
           if (rpta.isSuccess) {
             this.router.navigate(['/clientes']);
             if (!rpta.isWarning) {
-              swal.fire('Muy bien', rpta.message, 'success')
+              swal.fire('Muy bien', rpta.message, 'success');
             }
           }
         },
         error => {
           if (error.status === 400) {
+            this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
-          }
-          if (error.status === 404) {
+          } else if (error.status === 404) {
+            swal.fire('Error', error.error.message, 'error');
+          } else {
             swal.fire('Error', error.error.message, 'error');
           }
         }

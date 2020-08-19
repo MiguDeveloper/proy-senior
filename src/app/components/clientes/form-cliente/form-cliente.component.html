@@ -1,6 +1,17 @@
 <div class="card mt-5">
   <div class="card-header">{{ tituloForm }}</div>
   <div class="card-body">
+    <div
+      class="alert alert-danger"
+      role="alert"
+      *ngIf="msgsValidacion?.length > 0"
+    >
+      <ul>
+        <li *ngFor="let mensaje of msgsValidacion">
+          {{ mensaje }}
+        </li>
+      </ul>
+    </div>
     <form [formGroup]="clienteForm" autocomplete="off">
       <div class="form-group row">
         <label class="col-form-label col-sm-2">Nombre</label>
