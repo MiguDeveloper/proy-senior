@@ -20,7 +20,7 @@ export class PaginatorComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
-  ngOnChanges() {    
+  ngOnChanges() {
     this.desde = Math.min(Math.max(1, this.currentPage - 4), this.totalPages - 5);
     this.hasta = Math.max(Math.min(this.totalPages, this.currentPage + 4), 6);
 
