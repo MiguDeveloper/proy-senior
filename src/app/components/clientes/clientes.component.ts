@@ -2,7 +2,7 @@ import swal from 'sweetalert2';
 import { ClienteService } from './../../services/cliente.service';
 import { Cliente } from './../../models/cliente';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-clientes',
@@ -11,19 +11,41 @@ import { Router } from '@angular/router';
 })
 export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
+  lstPages: number[] = [];
+  totalPages: number;
+  currentPage: number;
+  isLast: boolean;
+  isFirst: boolean;
 
   constructor(
     private clienteService: ClienteService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.getClientes();
+    this.route.params.subscribe(params => {
+      let numPage = +params['page'];
+      if (!numPage) {
+        numPage = 0;
+      }
+      this.getClientes(numPage);
+    });
   }
 
-  getClientes() {
+  getClientes(page: number) {
     this.clienteService
-      .getClientes()
-      .subscribe(resp => this.clientes = resp);
+      .getClientes(page)
+      .subscribe(resp => {
+        this.clientes = resp.content;
+        this.currentPage = resp.number;
+        this.isLast = resp.last;
+        this.isFirst = resp.first;
+        this.totalPages = resp.totalPages;
+        this.lstPages = [];
+        for (let index = 1; index <= resp.totalPages; index++) {
+          this.lstPages.push(index);
+        }
+      });
   }
 
   verDetalleCliente(id: number) {
@@ -45,7 +67,7 @@ export class ClientesComponent implements OnInit {
           rpta => {
             if (rpta.isSuccess) {
               if (!rpta.isWarning) {
-                this.getClientes();
+                this.router.navigate(['/clientes/page', 0]);
                 swal.fire(
                   'Eliminado!',
                   'El cliente fue eliminado con éxito.',

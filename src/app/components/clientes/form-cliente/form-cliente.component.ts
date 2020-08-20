@@ -27,9 +27,12 @@ export class FormClienteComponent implements OnInit {
     this.createForm();
     this.route.params.subscribe(params => {
       const idCliente = params['id'];
-      if (idCliente) {
+      if (idCliente && Number(idCliente)) {
         this.cargarCliente(idCliente);
         this.tituloForm = 'Actualizar datos cliente';
+      } else {
+        this.router.navigate(['/clientes/page', 0]);
+        swal.fire('Cliente no coincide', 'ID de cliente invalido', 'warning');
       }
     });
   }
@@ -85,24 +88,22 @@ export class FormClienteComponent implements OnInit {
   }
 
   cargarCliente(id: number) {
-    if (id) {
-      this.clienteService.getClienteById(id).subscribe(
-        (rpta) => {
-          if (rpta.isSuccess) {
-            if (!rpta.isWarning) {
-              this.cliente = rpta.data;
-              this.clienteForm.get('nombre').setValue(this.cliente.nombre);
-              this.clienteForm.get('apellido').setValue(this.cliente.apellido);
-              this.clienteForm.get('email').setValue(this.cliente.email);
-            }
+    this.clienteService.getClienteById(id).subscribe(
+      (rpta) => {
+        if (rpta.isSuccess) {
+          if (!rpta.isWarning) {
+            this.cliente = rpta.data;
+            this.clienteForm.get('nombre').setValue(this.cliente.nombre);
+            this.clienteForm.get('apellido').setValue(this.cliente.apellido);
+            this.clienteForm.get('email').setValue(this.cliente.email);
           }
-        },
-        error => {
-          this.router.navigate(['/clientes']);
-          swal.fire('Error', error.error.message, 'error');
         }
-      );
-    }
+      },
+      error => {
+        this.router.navigate(['/home']);
+        swal.fire('Error', error.error.message, 'error');
+      }
+    );
   }
 
   actualizarCliente() {

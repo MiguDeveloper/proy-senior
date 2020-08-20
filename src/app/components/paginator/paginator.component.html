@@ -1,0 +1,41 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{ disabled: isFirst }">
+      <button type="button" class="page-link" (click)="goFirst()">
+        &laquo;
+      </button>
+    </li>
+    <li class="page-item" [ngClass]="{ disabled: isFirst }">
+      <button type="button" class="page-link" (click)="anterior()">
+        &lsaquo;
+      </button>
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let item of lstPages"
+      [ngClass]="{ active: item - 1 === currentPage }"
+    >
+      <div
+        *ngIf="item - 1 === currentPage; then sinEnlace; else conEnlace"
+      ></div>
+      <ng-template #sinEnlace>
+        <span class="page-link">{{ item }}</span>
+      </ng-template>
+      <ng-template #conEnlace>
+        <a class="page-link" [routerLink]="['/clientes/page', item - 1]">{{
+          item
+        }}</a>
+      </ng-template>
+    </li>
+    <li class="page-item" [ngClass]="{ disabled: isLast }">
+      <button type="button" class="page-link" (click)="siguiente()">
+        &rsaquo;
+      </button>
+    </li>
+    <li class="page-item" [ngClass]="{ disabled: isLast }">
+      <button type="button" class="page-link" (click)="goLast()">
+        &raquo;
+      </button>
+    </li>
+  </ul>
+</nav>

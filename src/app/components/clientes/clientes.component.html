@@ -11,7 +11,7 @@
     </button>
     <div *ngIf="clientes.length; then tablaUsuarios; else alertMensaje"></div>
 
-    <ng-template #alertMensaje> 
+    <ng-template #alertMensaje>
       <div class="alert alert-info" role="alert">
         Sin registros de usuarios
       </div>
@@ -48,6 +48,13 @@
           </tr>
         </tbody>
       </table>
+      <app-paginator
+        [lstPages]="lstPages"
+        [currentPage]="currentPage"
+        [isLast]="isLast"
+        [isFirst]="isFirst"
+        [totalPages]="totalPages"
+      ></app-paginator>
     </ng-template>
   </div>
 </div>

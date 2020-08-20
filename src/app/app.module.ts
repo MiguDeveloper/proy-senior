@@ -12,6 +12,7 @@ import { FormClienteComponent } from './components/clientes/form-cliente/form-cl
 import { ReactiveFormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 registerLocaleData(localeES, 'es');
 
@@ -23,6 +24,7 @@ registerLocaleData(localeES, 'es');
     FooterComponent,
     HomeComponent,
     FormClienteComponent,
+    PaginatorComponent,
   ],
   imports: [
     BrowserModule,

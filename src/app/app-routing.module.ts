@@ -6,9 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'clientes', component: ClientesComponent },
   { path: 'form-cliente', component: FormClienteComponent },
   { path: 'clientes/:id', component: FormClienteComponent },
+  { path: 'clientes/page/:page', component: ClientesComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 

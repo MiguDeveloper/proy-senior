@@ -1,3 +1,4 @@
+import { PaginationCliente } from './../models/pagination-cliente';
 import { ClienteResponse } from './../models/cliente-response';
 import { Cliente } from './../models/cliente';
 import { Injectable } from '@angular/core';
@@ -14,8 +15,8 @@ export class ClienteService {
 
   constructor(private httpCliente: HttpClient) { }
 
-  getClientes(): Observable<Cliente[]> {
-    return this.httpCliente.get<Cliente[]>(this.urlBase);
+  getClientes(page: number): Observable<PaginationCliente> {
+    return this.httpCliente.get<PaginationCliente>(`${this.urlBase}/page/${page}`);
   }
 
   saveCliente(cliente: Cliente): Observable<ClienteResponse> {
