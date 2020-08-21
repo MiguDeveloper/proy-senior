@@ -1,3 +1,4 @@
+import { MaterialModule } from './material.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 
@@ -13,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
 import { PaginatorComponent } from './components/paginator/paginator.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 registerLocaleData(localeES, 'es');
 
@@ -30,9 +32,11 @@ registerLocaleData(localeES, 'es');
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
-  providers: [{provide: LOCALE_ID, useValue: 'es'}],
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

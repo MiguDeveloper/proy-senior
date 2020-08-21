@@ -67,7 +67,7 @@ export class ClientesComponent implements OnInit {
           rpta => {
             if (rpta.isSuccess) {
               if (!rpta.isWarning) {
-                this.router.navigate(['/clientes/page', 0]);
+                this.getClientes(0);
                 swal.fire(
                   'Eliminado!',
                   'El cliente fue eliminado con éxito.',

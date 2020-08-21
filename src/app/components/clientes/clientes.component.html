@@ -1,7 +1,5 @@
 <div class="row mt-2">
   <div class="col-md-12">
-    <h3>Lista de clientes</h3>
-    <hr />
     <button
       class="btn btn-rounded btn-primary mb-2"
       type="button"
@@ -9,6 +7,8 @@
     >
       Crear cliente
     </button>
+    <hr />
+    <h3>Lista de clientes</h3>
     <div *ngIf="clientes.length; then tablaUsuarios; else alertMensaje"></div>
 
     <ng-template #alertMensaje>
