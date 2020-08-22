@@ -1,9 +1,17 @@
+import { ClienteResponse } from './../../../models/cliente-response';
 import { ClienteService } from './../../../services/cliente.service';
 import { Cliente } from './../../../models/cliente';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpEventType } from '@angular/common/http';
 import swal from 'sweetalert2';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface DialogData {
+  cliente: Cliente;
+  isUpdate: boolean;
+}
 
 @Component({
   selector: 'app-form-cliente',
@@ -16,27 +24,28 @@ export class FormClienteComponent implements OnInit {
   cliente: Cliente;
   tituloForm = 'Crear cliente';
   msgsValidacion: string[] = [];
+  private fotoSeleccionada: File;
+  progreso = 0;
 
   constructor(
     private fb: FormBuilder,
     private clienteService: ClienteService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private dialogRef: MatDialogRef<FormClienteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
     this.createForm();
-    this.route.params.subscribe(params => {
-      const idCliente = params['id'];
-      if (idCliente) {
-        if (idCliente && Number(idCliente)) {
-          this.cargarCliente(idCliente);
-          this.tituloForm = 'Actualizar datos cliente';
-        } else {
-          this.router.navigate(['/clientes/page', 0]);
-          swal.fire('Cliente no coincide', 'ID de cliente invalido', 'warning');
-        }
+    if (this.data) {
+      this.cliente = this.data.cliente;
+      this.cargarCliente();
+      if (this.data.isUpdate) {
+        this.tituloForm = 'Actualizar datos cliente';
+      } else {
+        this.tituloForm = 'Datos cliente';
       }
-    });
+    }
   }
 
   validateControlForm(nameControl: string) {
@@ -91,28 +100,15 @@ export class FormClienteComponent implements OnInit {
     }
   }
 
-  cargarCliente(id: number) {
-    this.clienteService.getClienteById(id).subscribe(
-      (rpta) => {
-        if (rpta.isSuccess) {
-          if (!rpta.isWarning) {
-            this.cliente = rpta.data;
-            this.clienteForm.get('nombre').setValue(this.cliente.nombre);
-            this.clienteForm.get('apellido').setValue(this.cliente.apellido);
-            this.clienteForm.get('email').setValue(this.cliente.email);
-            this.clienteForm.get('createAt').setValue(this.cliente.createAt);
-          }
-        }
-      },
-      error => {
-        this.router.navigate(['/home']);
-        swal.fire('Error', error.error.message, 'error');
-      }
-    );
+  cargarCliente() {
+    this.clienteForm.get('nombre').setValue(this.cliente.nombre);
+    this.clienteForm.get('apellido').setValue(this.cliente.apellido);
+    this.clienteForm.get('email').setValue(this.cliente.email);
+    this.clienteForm.get('createAt').setValue(this.cliente.createAt);
   }
 
   actualizarCliente() {
-    if (this.cliente) {
+    if (this.clienteForm.valid) {
       this.cliente.nombre = this.clienteForm.get('nombre').value;
       this.cliente.apellido = this.clienteForm.get('apellido').value;
       this.cliente.email = this.clienteForm.get('email').value;
@@ -120,8 +116,8 @@ export class FormClienteComponent implements OnInit {
       this.clienteService.putCliente(this.cliente).subscribe(
         rpta => {
           if (rpta.isSuccess) {
-            this.router.navigate(['/clientes/page', 0]);
             if (!rpta.isWarning) {
+              this.dialogRef.close({ isUpdate: true });
               swal.fire('Muy bien', rpta.message, 'success');
             }
           }
@@ -138,6 +134,42 @@ export class FormClienteComponent implements OnInit {
         }
       );
     }
+  }
+
+  seleccionarFoto(event: any) {
+    this.fotoSeleccionada = event.target.files[0];
+    this.progreso = 0;
+    if (this.fotoSeleccionada.type.indexOf('image') < 0) {
+      swal.fire('Error', 'Solo puede ser de tipo imagen', 'error');
+      this.fotoSeleccionada = null;
+    }
+    console.log(this.fotoSeleccionada);
+  }
+
+  subirFoto() {
+    if (this.fotoSeleccionada) {
+      this.clienteService.subirFoto(this.fotoSeleccionada, this.cliente.id).subscribe(
+        rpta => {
+          if (rpta.type === HttpEventType.UploadProgress) {
+            this.progreso = Math.round(rpta.loaded / rpta.total * 100);
+          } else if (rpta.type === HttpEventType.Response) {
+            const clienteResponse = rpta.body as ClienteResponse;
+            this.cliente = clienteResponse.data;
+            this.fotoSeleccionada = null;
+            swal.fire('Muy bien', clienteResponse.message, 'success');
+          }
+        },
+        error => {
+          swal.fire('Error', error.error.message, 'error');
+        }
+      );
+    } else {
+      swal.fire('Error', 'Debe seleccionar un archivo', 'error');
+    }
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
   checkFieldsForm() {

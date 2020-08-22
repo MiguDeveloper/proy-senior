@@ -1,4 +1,4 @@
-<div class="card mt-5">
+<div class="card">
   <div class="card-header">{{ tituloForm }}</div>
   <div class="card-body">
     <div
@@ -12,90 +12,164 @@
         </li>
       </ul>
     </div>
-    <form [formGroup]="clienteForm" autocomplete="off">
-      <div class="form-group row">
-        <label class="col-form-label col-sm-2">Nombre</label>
-        <div class="col-sm-6">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="nombre"
-            [class.is-invalid]="validateControlForm('nombre')"
+    <div class="row">
+      <div class="col-sm-12 col-md-3" *ngIf="cliente">
+        <div *ngIf="cliente.foto; then conFoto; else sinFoto"></div>
+        <ng-template #sinFoto>
+          <p>Aún sin foto. Sube una en el formulario de la derecha</p>
+        </ng-template>
+        <ng-template #conFoto>
+          <img
+            src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+            class="img-fluid"
+            [alt]="cliente.nombre"
           />
-          <small
-            class="text-form text-danger"
-            *ngIf="validateControlForm('nombre')"
-            >Campo requerido</small
-          >
-        </div>
+          <div class="progress" *ngIf="progreso > 0">
+            <div
+              class="progress-bar progress-bar-striped"
+              role="progressbar"
+              [ngStyle]="{ width: progreso + '%' }"
+              attr.aria-valuenow="{{ progreso }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {{ progreso }} %
+            </div>
+          </div>
+        </ng-template>
       </div>
-      <div class="form-group row">
-        <label class="col-form-label col-sm-2">apellido</label>
-        <div class="col-sm-6">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="apellido"
-            [class.is-invalid]="validateControlForm('apellido')"
-          />
-          <small
-            class="text-form text-danger"
-            *ngIf="validateControlForm('apellido')"
-            >Campo requerido</small
-          >
-        </div>
+      <div class="col-sm-12 col-md-9">
+        <form [formGroup]="clienteForm" autocomplete="off">
+          <div class="form-group row">
+            <label class="col-form-label col-sm-12 col-md-2">Nombre</label>
+            <div class="col-sm-12 col-md-10">
+              <input
+                [readOnly]="!data.isUpdate"
+                type="text"
+                class="form-control"
+                formControlName="nombre"
+                [class.is-invalid]="validateControlForm('nombre')"
+              />
+              <small
+                class="text-form text-danger"
+                *ngIf="validateControlForm('nombre')"
+                >Campo requerido</small
+              >
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-12 col-md-2">apellido</label>
+            <div class="col-sm-12 col-md-10">
+              <input
+                [readOnly]="!data.isUpdate"
+                type="text"
+                class="form-control"
+                formControlName="apellido"
+                [class.is-invalid]="validateControlForm('apellido')"
+              />
+              <small
+                class="text-form text-danger"
+                *ngIf="validateControlForm('apellido')"
+                >Campo requerido</small
+              >
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-12 col-md-2">Email</label>
+            <div class="col-sm-12 col-md-10">
+              <input
+                [readOnly]="!data.isUpdate"
+                type="text"
+                class="form-control"
+                formControlName="email"
+                [class.is-invalid]="validateControlForm('email')"
+              />
+              <small
+                class="text-form text-danger"
+                *ngIf="validateControlForm('email')"
+                >Campo requerido</small
+              >
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-12 col-md-2">Fecha</label>
+            <div class="col-sm-12 col-md-10">
+              <mat-form-field color="accent">
+                <mat-label>Fecha</mat-label>
+                <input
+                  [readOnly]="!data.isUpdate"
+                  matInput
+                  [matDatepicker]="picker1"
+                  formControlName="createAt"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error
+                  *ngIf="clienteForm.get('createAt').hasError('required')"
+                >
+                  Campo requerido
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="cliente && data.isUpdate">
+            <label class="col-form-label col-sm-12 col-md-2">Subir foto</label>
+            <div class="col-sm-12 col-md-10">
+              <div class="input-group">
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="inputGroupFile04"
+                    aria-describedby="inputGroupFileAddon04"
+                    (change)="seleccionarFoto($event)"
+                  />
+                  <label class="custom-file-label" for="inputGroupFile04"
+                    >Seleccionar foto</label
+                  >
+                </div>
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="inputGroupFileAddon04"
+                    (click)="subirFoto()"
+                  >
+                    Subir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="!cliente">
+            <label class="col-sm-10 col-md-2 col-form-label">&nbsp;</label>
+            <div class="input-group col-sm-12 col-md-10">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-block"
+                (click)="saveForm()"                
+              >
+                Guardar
+              </button>              
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="cliente && data.isUpdate">
+            <label class="col-sm-10 col-md-2 col-form-label">&nbsp;</label>
+            <div class="input-group col-sm-12 col-md-10">              
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-block"
+                (click)="actualizarCliente()"                
+              >
+                Actualizar
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="form-group row">
-        <label class="col-form-label col-sm-2">Email</label>
-        <div class="col-sm-6">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="email"
-            [class.is-invalid]="validateControlForm('email')"
-          />
-          <small
-            class="text-form text-danger"
-            *ngIf="validateControlForm('email')"
-            >Campo requerido</small
-          >
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-form-label col-sm-2">Fecha</label>
-        <div class="col-sm-6">
-          <mat-form-field color="accent" appearance="fill">
-            <mat-label>dd/mm/aaaa</mat-label>
-            <input matInput [matDatepicker]="picker1" formControlName="createAt">
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-            <mat-error *ngIf="clienteForm.get('createAt').hasError('required')">
-              Campo requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-2 col-form-label">&nbsp;</label>
-        <div class="input-group col-sm-6">
-          <button
-            type="button"
-            class="btn btn-outline-primary btn-block"
-            (click)="saveForm()"
-            *ngIf="!cliente"
-          >
-            Guardar
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-primary btn-block"
-            (click)="actualizarCliente()"
-            *ngIf="cliente"
-          >
-            Actualizar
-          </button>
-        </div>
-      </div>
-    </form>
+    </div>
   </div>
 </div>

@@ -1,8 +1,10 @@
+import { FormClienteComponent } from './form-cliente/form-cliente.component';
 import swal from 'sweetalert2';
 import { ClienteService } from './../../services/cliente.service';
 import { Cliente } from './../../models/cliente';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-clientes',
@@ -20,7 +22,8 @@ export class ClientesComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private router: Router,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -46,10 +49,6 @@ export class ClientesComponent implements OnInit {
           this.lstPages.push(index);
         }
       });
-  }
-
-  verDetalleCliente(id: number) {
-    this.router.navigate(['clientes', id]);
   }
 
   deleteCliente(cliente: Cliente) {
@@ -86,6 +85,27 @@ export class ClientesComponent implements OnInit {
             }
           }
         );
+      }
+    });
+  }
+
+  openDialog(clienteSend: Cliente, update: boolean) {
+    const isAutoFocus = update;
+    const dialogSettings = {
+      width: '900px',
+      autoFocus: isAutoFocus,
+      data: {
+        cliente: clienteSend,
+        isUpdate: update
+      }
+    };
+
+    this.dialog.open(
+      FormClienteComponent,
+      dialogSettings
+    ).afterClosed().subscribe(rpta => {
+      if (rpta?.isUpdate) {
+        this.getClientes(0);
       }
     });
   }

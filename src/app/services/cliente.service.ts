@@ -3,7 +3,7 @@ import { ClienteResponse } from './../models/cliente-response';
 import { Cliente } from './../models/cliente';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +37,16 @@ export class ClienteService {
 
   deleteCliente(id: number): Observable<ClienteResponse> {
     return this.httpCliente.delete<ClienteResponse>(`${this.urlBase}/${id}`);
+  }
+
+  subirFoto(archivo: File, id): Observable<HttpEvent<{}>> {
+    let formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('id', id);
+
+    const req = new HttpRequest('POST', `${this.urlBase}/upload`, formData, {
+      reportProgress: true
+    });
+    return this.httpCliente.request(req);
   }
 }
