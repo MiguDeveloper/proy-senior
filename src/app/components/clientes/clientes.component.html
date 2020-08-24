@@ -3,7 +3,7 @@
     <button
       class="btn btn-rounded btn-primary mb-2"
       type="button"
-      [routerLink]="['/form-cliente']"
+      (click)="openDialog(null, true)"
     >
       Crear cliente
     </button>
@@ -21,7 +21,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Foto</th>
               <th scope="col">Nombres</th>
               <th scope="col">Apellidos</th>
               <th scope="col">Email</th>
@@ -31,11 +31,28 @@
           </thead>
           <tbody>
             <tr *ngFor="let cliente of clientes">
-              <td>{{ cliente.id }}</td>
+              <td>
+                <img
+                  style="height: 50px; width: 50px;"
+                  src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+                  alt="{{ cliente.nombre }}"
+                  title="{{ cliente.nombre }}"
+                  *ngIf="cliente.foto"
+                  class="img-thumbnail"
+                />
+                <img
+                  style="height: 50px; width: 50px;"
+                  src="http://localhost:8080/api/uploads/img/user-not-found.png"
+                  alt="{{ cliente.nombre }}"
+                  title="{{ cliente.nombre }}"
+                  *ngIf="!cliente.foto"
+                  class="img-thumbnail"
+                />
+              </td>
               <td>{{ cliente.nombre.toUpperCase() }}</td>
               <td>{{ cliente.apellido }}</td>
               <td>{{ cliente.email }}</td>
-              <td>{{ cliente.createAt | date: "EEEE dd, MMMM yyyy" }}</td>
+              <td>{{ cliente.createAt | date: 'EEEE dd, MMMM yyyy' }}</td>
               <td>
                 <i class="fa fa-eye" (click)="openDialog(cliente, false)"></i>
                 <i

@@ -1,7 +1,8 @@
+import { ModalService } from './../../../services/modal.service';
 import { ClienteResponse } from './../../../models/cliente-response';
 import { ClienteService } from './../../../services/cliente.service';
 import { Cliente } from './../../../models/cliente';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
@@ -16,10 +17,9 @@ export interface DialogData {
 @Component({
   selector: 'app-form-cliente',
   templateUrl: './form-cliente.component.html',
-  styleUrls: ['./form-cliente.component.css']
+  styleUrls: ['./form-cliente.component.css'],
 })
 export class FormClienteComponent implements OnInit {
-
   clienteForm: FormGroup;
   cliente: Cliente;
   tituloForm = 'Crear cliente';
@@ -30,14 +30,14 @@ export class FormClienteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private clienteService: ClienteService,
-    private route: ActivatedRoute,
-    private router: Router,
     private dialogRef: MatDialogRef<FormClienteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
-    if (this.data) {
+    if (this.data.cliente) {
       this.cliente = this.data.cliente;
       this.cargarCliente();
       if (this.data.isUpdate) {
@@ -45,11 +45,16 @@ export class FormClienteComponent implements OnInit {
       } else {
         this.tituloForm = 'Datos cliente';
       }
+    } else {
+      this.tituloForm = 'Crear cliente';
     }
   }
 
   validateControlForm(nameControl: string) {
-    return this.clienteForm.get(nameControl).invalid && this.clienteForm.get(nameControl).touched;
+    return (
+      this.clienteForm.get(nameControl).invalid &&
+      this.clienteForm.get(nameControl).touched
+    );
   }
 
   createForm() {
@@ -60,10 +65,10 @@ export class FormClienteComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')
-        ]
+          Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$'),
+        ],
       ],
-      createAt: ['', Validators.required]
+      createAt: ['', Validators.required],
     });
   }
 
@@ -80,12 +85,12 @@ export class FormClienteComponent implements OnInit {
           if (rpta.isSuccess) {
             if (!rpta.isWarning) {
               this.clienteForm.reset();
-              this.router.navigate(['/clientes/page', 0]);
+              this.closeDialog(true);
               swal.fire('Muy bien', rpta.message, 'success');
             }
           }
         },
-        error => {
+        (error) => {
           if (error.status === 400) {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
@@ -114,15 +119,15 @@ export class FormClienteComponent implements OnInit {
       this.cliente.email = this.clienteForm.get('email').value;
       this.cliente.createAt = this.clienteForm.get('createAt').value;
       this.clienteService.putCliente(this.cliente).subscribe(
-        rpta => {
+        (rpta) => {
           if (rpta.isSuccess) {
             if (!rpta.isWarning) {
-              this.dialogRef.close({ isUpdate: true });
+              this.closeDialog(true);
               swal.fire('Muy bien', rpta.message, 'success');
             }
           }
         },
-        error => {
+        (error) => {
           if (error.status === 400) {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
@@ -148,35 +153,36 @@ export class FormClienteComponent implements OnInit {
 
   subirFoto() {
     if (this.fotoSeleccionada) {
-      this.clienteService.subirFoto(this.fotoSeleccionada, this.cliente.id).subscribe(
-        rpta => {
-          if (rpta.type === HttpEventType.UploadProgress) {
-            this.progreso = Math.round(rpta.loaded / rpta.total * 100);
-          } else if (rpta.type === HttpEventType.Response) {
-            const clienteResponse = rpta.body as ClienteResponse;
-            this.cliente = clienteResponse.data;
-            this.fotoSeleccionada = null;
-            swal.fire('Muy bien', clienteResponse.message, 'success');
+      this.clienteService
+        .subirFoto(this.fotoSeleccionada, this.cliente.id)
+        .subscribe(
+          (rpta) => {
+            if (rpta.type === HttpEventType.UploadProgress) {
+              this.progreso = Math.round((rpta.loaded / rpta.total) * 100);
+            } else if (rpta.type === HttpEventType.Response) {
+              const clienteResponse = rpta.body as ClienteResponse;
+              this.cliente = clienteResponse.data;
+              this.fotoSeleccionada = null;
+              this.modalService.notificarUpload.emit(this.cliente);
+              swal.fire('Muy bien', clienteResponse.message, 'success');
+            }
+          },
+          (error) => {
+            swal.fire('Error', error.error.message, 'error');
           }
-        },
-        error => {
-          swal.fire('Error', error.error.message, 'error');
-        }
-      );
+        );
     } else {
       swal.fire('Error', 'Debe seleccionar un archivo', 'error');
     }
   }
 
-  closeDialog() {
-    this.dialogRef.close();
+  closeDialog(estado: boolean) {
+    this.dialogRef.close({ isUpdate: estado });
   }
 
   checkFieldsForm() {
-    Object.values(this.clienteForm.controls)
-      .forEach(control => {
-        control.markAsTouched();
-      });
+    Object.values(this.clienteForm.controls).forEach((control) => {
+      control.markAsTouched();
+    });
   }
-
 }

@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-12 col-md-2">apellido</label>
+            <label class="col-form-label col-sm-12 col-md-2">Apellido</label>
             <div class="col-sm-12 col-md-10">
               <input
                 [readOnly]="!data.isUpdate"
@@ -150,19 +150,19 @@
               <button
                 type="button"
                 class="btn btn-outline-primary btn-block"
-                (click)="saveForm()"                
+                (click)="saveForm()"
               >
                 Guardar
-              </button>              
+              </button>
             </div>
           </div>
           <div class="form-group row" *ngIf="cliente && data.isUpdate">
             <label class="col-sm-10 col-md-2 col-form-label">&nbsp;</label>
-            <div class="input-group col-sm-12 col-md-10">              
+            <div class="input-group col-sm-12 col-md-10">
               <button
                 type="button"
                 class="btn btn-outline-primary btn-block"
-                (click)="actualizarCliente()"                
+                (click)="actualizarCliente()"
               >
                 Actualizar
               </button>

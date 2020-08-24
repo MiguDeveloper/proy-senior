@@ -3,26 +3,32 @@ import { ClienteResponse } from './../models/cliente-response';
 import { Cliente } from './../models/cliente';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpRequest,
+  HttpEvent,
+} from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClienteService {
-
   urlBase = 'http://localhost:8080/api/clientes';
   httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
-  constructor(private httpCliente: HttpClient) { }
+  constructor(private httpCliente: HttpClient) {}
 
   getClientes(page: number): Observable<PaginationCliente> {
-    return this.httpCliente.get<PaginationCliente>(`${this.urlBase}/page/${page}`);
+    return this.httpCliente.get<PaginationCliente>(
+      `${this.urlBase}/page/${page}`
+    );
   }
 
   saveCliente(cliente: Cliente): Observable<ClienteResponse> {
-    return this.httpCliente.post<ClienteResponse>(this.urlBase,
-      cliente,
-      { headers: this.httpHeaders });
+    return this.httpCliente.post<ClienteResponse>(this.urlBase, cliente, {
+      headers: this.httpHeaders,
+    });
   }
 
   getClienteById(id: number): Observable<ClienteResponse> {
@@ -30,9 +36,11 @@ export class ClienteService {
   }
 
   putCliente(cliente: Cliente): Observable<ClienteResponse> {
-    return this.httpCliente.put<ClienteResponse>(`${this.urlBase}/${cliente.id}`,
+    return this.httpCliente.put<ClienteResponse>(
+      `${this.urlBase}/${cliente.id}`,
       cliente,
-      { headers: this.httpHeaders });
+      { headers: this.httpHeaders }
+    );
   }
 
   deleteCliente(id: number): Observable<ClienteResponse> {
@@ -40,12 +48,12 @@ export class ClienteService {
   }
 
   subirFoto(archivo: File, id): Observable<HttpEvent<{}>> {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
 
     const req = new HttpRequest('POST', `${this.urlBase}/upload`, formData, {
-      reportProgress: true
+      reportProgress: true,
     });
     return this.httpCliente.request(req);
   }
