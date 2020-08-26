@@ -1,3 +1,4 @@
+import { Region } from './../models/region';
 import { PaginationCliente } from './../models/pagination-cliente';
 import { ClienteResponse } from './../models/cliente-response';
 import { Cliente } from './../models/cliente';
@@ -15,6 +16,7 @@ import {
 })
 export class ClienteService {
   urlBase = 'http://localhost:8080/api/clientes';
+  urlRegiones = 'http://localhost:8080/api';
   httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
   constructor(private httpCliente: HttpClient) {}
@@ -47,6 +49,10 @@ export class ClienteService {
     return this.httpCliente.delete<ClienteResponse>(`${this.urlBase}/${id}`);
   }
 
+  getRegiones(): Observable<Array<Region>> {
+    return this.httpCliente.get<Array<Region>>(`${this.urlRegiones}/regiones`);
+  }
+
   subirFoto(archivo: File, id): Observable<HttpEvent<{}>> {
     const formData = new FormData();
     formData.append('archivo', archivo);
@@ -55,6 +61,7 @@ export class ClienteService {
     const req = new HttpRequest('POST', `${this.urlBase}/upload`, formData, {
       reportProgress: true,
     });
+
     return this.httpCliente.request(req);
   }
 }

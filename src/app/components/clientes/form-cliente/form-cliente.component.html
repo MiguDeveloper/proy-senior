@@ -44,7 +44,6 @@
             <label class="col-form-label col-sm-12 col-md-2">Nombre</label>
             <div class="col-sm-12 col-md-10">
               <input
-                [readOnly]="!data.isUpdate"
                 type="text"
                 class="form-control"
                 formControlName="nombre"
@@ -61,7 +60,6 @@
             <label class="col-form-label col-sm-12 col-md-2">Apellido</label>
             <div class="col-sm-12 col-md-10">
               <input
-                [readOnly]="!data.isUpdate"
                 type="text"
                 class="form-control"
                 formControlName="apellido"
@@ -78,7 +76,6 @@
             <label class="col-form-label col-sm-12 col-md-2">Email</label>
             <div class="col-sm-12 col-md-10">
               <input
-                [readOnly]="!data.isUpdate"
                 type="text"
                 class="form-control"
                 formControlName="email"
@@ -92,12 +89,33 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-sm-12 col-md-2">Región</label>
+            <div class="col-sm-12 col-md-10">
+              <select
+                class="custom-select"
+                formControlName="region"
+                [class.is-invalid]="validateControlForm('region')"
+              >
+                <option value="">Seleccionar</option>
+                <option
+                  *ngFor="let region of regiones"
+                  value="{{ region.id }}"
+                  >{{ region.nombre }}</option
+                >
+              </select>
+              <small
+                class="text-form text-danger"
+                *ngIf="validateControlForm('region')"
+                >Campo requerido</small
+              >
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-sm-12 col-md-2">Fecha</label>
             <div class="col-sm-12 col-md-10">
               <mat-form-field color="accent">
                 <mat-label>Fecha</mat-label>
                 <input
-                  [readOnly]="!data.isUpdate"
                   matInput
                   [matDatepicker]="picker1"
                   formControlName="createAt"

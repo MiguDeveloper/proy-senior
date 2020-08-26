@@ -1,3 +1,4 @@
+import { Region } from './../../../models/region';
 import { ModalService } from './../../../services/modal.service';
 import { ClienteResponse } from './../../../models/cliente-response';
 import { ClienteService } from './../../../services/cliente.service';
@@ -26,6 +27,7 @@ export class FormClienteComponent implements OnInit {
   msgsValidacion: string[] = [];
   private fotoSeleccionada: File;
   progreso = 0;
+  regiones: Region[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -59,17 +61,31 @@ export class FormClienteComponent implements OnInit {
 
   createForm() {
     this.clienteForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      nombre: [
+        { value: '', disabled: !this.data.isUpdate },
+        Validators.required,
+      ],
+      apellido: [
+        { value: '', disabled: !this.data.isUpdate },
+        Validators.required,
+      ],
       email: [
-        '',
+        { value: '', disabled: !this.data.isUpdate },
         [
           Validators.required,
           Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$'),
         ],
       ],
-      createAt: ['', Validators.required],
+      createAt: [
+        { value: '', disabled: !this.data.isUpdate },
+        Validators.required,
+      ],
+      region: [
+        { value: '', disabled: !this.data.isUpdate },
+        Validators.required,
+      ],
     });
+    this.getRegiones();
   }
 
   saveForm() {
@@ -79,6 +95,9 @@ export class FormClienteComponent implements OnInit {
       cliente.apellido = this.clienteForm.get('apellido').value;
       cliente.email = this.clienteForm.get('email').value;
       cliente.createAt = this.clienteForm.get('createAt').value;
+      cliente.region = this.regiones.find(
+        (region) => region.id === +this.clienteForm.get('region').value
+      );
 
       this.clienteService.saveCliente(cliente).subscribe(
         (rpta) => {
@@ -110,6 +129,7 @@ export class FormClienteComponent implements OnInit {
     this.clienteForm.get('apellido').setValue(this.cliente.apellido);
     this.clienteForm.get('email').setValue(this.cliente.email);
     this.clienteForm.get('createAt').setValue(this.cliente.createAt);
+    this.clienteForm.get('region').setValue(this.cliente.region.id);
   }
 
   actualizarCliente() {
@@ -118,6 +138,9 @@ export class FormClienteComponent implements OnInit {
       this.cliente.apellido = this.clienteForm.get('apellido').value;
       this.cliente.email = this.clienteForm.get('email').value;
       this.cliente.createAt = this.clienteForm.get('createAt').value;
+      this.cliente.region = this.regiones.find(
+        (region) => region.id === +this.clienteForm.get('region').value
+      );
       this.clienteService.putCliente(this.cliente).subscribe(
         (rpta) => {
           if (rpta.isSuccess) {
@@ -174,6 +197,12 @@ export class FormClienteComponent implements OnInit {
     } else {
       swal.fire('Error', 'Debe seleccionar un archivo', 'error');
     }
+  }
+
+  getRegiones() {
+    this.clienteService.getRegiones().subscribe((rpta) => {
+      this.regiones = rpta;
+    });
   }
 
   closeDialog(estado: boolean) {
