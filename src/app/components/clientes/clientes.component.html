@@ -4,6 +4,7 @@
       class="btn btn-rounded btn-primary mb-2"
       type="button"
       (click)="openDialog(null, true)"
+      *ngIf="getPermisos('ROLE_ADMIN')"
     >
       Crear cliente
     </button>
@@ -12,16 +13,14 @@
     <div *ngIf="clientes.length; then tablaUsuarios; else alertMensaje"></div>
 
     <ng-template #alertMensaje>
-      <div class="alert alert-info" role="alert">
-        Sin registros de usuarios
-      </div>
+      <div class="alert alert-info" role="alert">Sin registros de usuarios</div>
     </ng-template>
     <ng-template #tablaUsuarios>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Foto</th>
+              <th scope="col" *ngIf="getPermisos('ROLE_USER')">Foto</th>
               <th scope="col">Nombres</th>
               <th scope="col">Apellidos</th>
               <th scope="col">Email</th>
@@ -31,9 +30,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let cliente of clientes">
-              <td>
+              <td *ngIf="getPermisos('ROLE_USER')">
                 <img
-                  style="height: 50px; width: 50px;"
+                  style="height: 50px; width: 50px"
                   src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
                   alt="{{ cliente.nombre }}"
                   title="{{ cliente.nombre }}"
@@ -41,7 +40,7 @@
                   class="img-thumbnail"
                 />
                 <img
-                  style="height: 50px; width: 50px;"
+                  style="height: 50px; width: 50px"
                   src="http://localhost:8080/api/uploads/img/user-not-found.png"
                   alt="{{ cliente.nombre }}"
                   title="{{ cliente.nombre }}"
@@ -54,14 +53,23 @@
               <td>{{ cliente.email }}</td>
               <td>{{ cliente.createAt | date: 'EEEE dd, MMMM yyyy' }}</td>
               <td>
-                <i class="fa fa-eye" (click)="openDialog(cliente, false)"></i>
+                <!-- ver-->
+                <i
+                  class="fa fa-eye"
+                  (click)="openDialog(cliente, false)"
+                  *ngIf="getPermisos('ROLE_USER')"
+                ></i>
+                <!-- actualizar-->
                 <i
                   class="fa fa-pencil-square-o ml-1"
                   (click)="openDialog(cliente, true)"
+                  *ngIf="getPermisos('ROLE_ADMIN')"
                 ></i>
+                <!-- eliminar-->
                 <i
                   class="fa fa-trash-o ml-1"
                   (click)="deleteCliente(cliente)"
+                  *ngIf="getPermisos('ROLE_ADMIN')"
                 ></i>
               </td>
             </tr>

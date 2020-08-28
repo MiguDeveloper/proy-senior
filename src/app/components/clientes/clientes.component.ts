@@ -1,10 +1,11 @@
+import { AuthService } from './../../services/auth.service';
 import { ModalService } from './../../services/modal.service';
 import { FormClienteComponent } from './form-cliente/form-cliente.component';
 import swal from 'sweetalert2';
 import { ClienteService } from './../../services/cliente.service';
 import { Cliente } from './../../models/cliente';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -23,8 +24,10 @@ export class ClientesComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private route: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +43,10 @@ export class ClientesComponent implements OnInit {
         client.id === cliente.id ? (client.foto = cliente.foto) : ''
       );
     });
+  }
+
+  getPermisos(rol: string): boolean {
+    return this.authService.hasRole(rol);
   }
 
   getClientes(page: number) {
@@ -83,6 +90,10 @@ export class ClientesComponent implements OnInit {
               }
             },
             (error) => {
+              if (error.status === 401 || error.status === 403) {
+                this.router.navigate(['/login']);
+                swal.fire('Error!', 'sin acceso al recurso', 'error');
+              }
               if (error.status === 404) {
                 swal.fire('Error!', error.error.message, 'error');
               }

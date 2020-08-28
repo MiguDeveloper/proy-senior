@@ -1,3 +1,4 @@
+import { AuthService } from './../../../services/auth.service';
 import { Region } from './../../../models/region';
 import { ModalService } from './../../../services/modal.service';
 import { ClienteResponse } from './../../../models/cliente-response';
@@ -5,7 +6,7 @@ import { ClienteService } from './../../../services/cliente.service';
 import { Cliente } from './../../../models/cliente';
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
 import swal from 'sweetalert2';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,7 +35,9 @@ export class FormClienteComponent implements OnInit {
     private clienteService: ClienteService,
     private dialogRef: MatDialogRef<FormClienteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +53,10 @@ export class FormClienteComponent implements OnInit {
     } else {
       this.tituloForm = 'Crear cliente';
     }
+  }
+
+  getPermisos(rol: string): boolean {
+    return this.authService.hasRole(rol);
   }
 
   validateControlForm(nameControl: string) {
@@ -114,6 +121,17 @@ export class FormClienteComponent implements OnInit {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
           }
+          if (error.status === 401) {
+            this.router.navigate(['/login']);
+            swal.fire('Error!', 'Primero debe ingresar al sistema', 'error');
+          }
+          if (error.status === 403) {
+            swal.fire(
+              'Error!',
+              'Usted no tiene los permisos para esta acción',
+              'error'
+            );
+          }
           if (error.status === 404) {
             swal.fire('Error', error.error.message, 'error');
           }
@@ -154,6 +172,15 @@ export class FormClienteComponent implements OnInit {
           if (error.status === 400) {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
+          } else if (error.status === 401) {
+            this.router.navigate(['/login']);
+            swal.fire('Error!', 'sin acceso al recurso', 'error');
+          } else if (error.status === 403) {
+            swal.fire(
+              'Error!',
+              'Usted no tiene los permisos para esta acción',
+              'error'
+            );
           } else if (error.status === 404) {
             swal.fire('Error', error.error.message, 'error');
           } else {
@@ -191,7 +218,18 @@ export class FormClienteComponent implements OnInit {
             }
           },
           (error) => {
-            swal.fire('Error', error.error.message, 'error');
+            if (error.status === 401) {
+              this.router.navigate(['/login']);
+              swal.fire('Error!', 'sin acceso al recurso', 'error');
+            } else if (error.status === 403) {
+              swal.fire(
+                'Error!',
+                'Usted no tiene los permisos para esta acción',
+                'error'
+              );
+            } else {
+              swal.fire('Error', error.error.message, 'error');
+            }
           }
         );
     } else {
@@ -200,9 +238,18 @@ export class FormClienteComponent implements OnInit {
   }
 
   getRegiones() {
-    this.clienteService.getRegiones().subscribe((rpta) => {
-      this.regiones = rpta;
-    });
+    this.clienteService.getRegiones().subscribe(
+      (rpta) => {
+        this.regiones = rpta;
+      },
+      (error) => {
+        if (error.status === 401) {
+          console.log('No tiene acceso debe logearse');
+        } else if (error.status === 403) {
+          console.log('No tiene permisos de acceso');
+        }
+      }
+    );
   }
 
   closeDialog(estado: boolean) {

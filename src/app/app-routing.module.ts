@@ -1,4 +1,4 @@
-import { FormClienteComponent } from './components/clientes/form-cliente/form-cliente.component';
+import { LoginComponent } from './components/login/login.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'clientes/page/:page', component: ClientesComponent },
+  { path: 'login', component: LoginComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
@@ -14,4 +15,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

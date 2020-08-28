@@ -1,0 +1,41 @@
+<div class="card border-primary mt-2">
+  <div class="card-header">{{ titulo }}</div>
+  <div class="card-body">
+    <form [formGroup]="loginForm">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Usuario</label>
+        <input
+          type="email"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          formControlName="username"
+          [class.is-invalid]="validateFormControl('username')"
+        />
+        <small
+          class="text-form text-danger"
+          *ngIf="validateFormControl('username')"
+          >Campo requerido</small
+        >
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="exampleInputPassword1"
+          formControlName="password"
+          [class.is-invalid]="validateFormControl('password')"
+        />
+        <small
+          class="text-form text-danger"
+          *ngIf="validateFormControl('password')"
+          >Campo requerido</small
+        >
+      </div>
+      <button type="button" class="btn btn-primary" (click)="login()">
+        Aceptar
+      </button>
+    </form>
+  </div>
+</div>
