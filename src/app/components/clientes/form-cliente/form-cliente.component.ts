@@ -121,17 +121,6 @@ export class FormClienteComponent implements OnInit {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
           }
-          if (error.status === 401) {
-            this.router.navigate(['/login']);
-            swal.fire('Error!', 'Primero debe ingresar al sistema', 'error');
-          }
-          if (error.status === 403) {
-            swal.fire(
-              'Error!',
-              'Usted no tiene los permisos para esta acción',
-              'error'
-            );
-          }
           if (error.status === 404) {
             swal.fire('Error', error.error.message, 'error');
           }
@@ -172,15 +161,6 @@ export class FormClienteComponent implements OnInit {
           if (error.status === 400) {
             this.msgsValidacion = error.error.errors;
             swal.fire('Error', error.error.message, 'error');
-          } else if (error.status === 401) {
-            this.router.navigate(['/login']);
-            swal.fire('Error!', 'sin acceso al recurso', 'error');
-          } else if (error.status === 403) {
-            swal.fire(
-              'Error!',
-              'Usted no tiene los permisos para esta acción',
-              'error'
-            );
           } else if (error.status === 404) {
             swal.fire('Error', error.error.message, 'error');
           } else {
@@ -218,18 +198,7 @@ export class FormClienteComponent implements OnInit {
             }
           },
           (error) => {
-            if (error.status === 401) {
-              this.router.navigate(['/login']);
-              swal.fire('Error!', 'sin acceso al recurso', 'error');
-            } else if (error.status === 403) {
-              swal.fire(
-                'Error!',
-                'Usted no tiene los permisos para esta acción',
-                'error'
-              );
-            } else {
-              swal.fire('Error', error.error.message, 'error');
-            }
+            swal.fire('Error', error.error.message, 'error');
           }
         );
     } else {
@@ -242,13 +211,7 @@ export class FormClienteComponent implements OnInit {
       (rpta) => {
         this.regiones = rpta;
       },
-      (error) => {
-        if (error.status === 401) {
-          console.log('No tiene acceso debe logearse');
-        } else if (error.status === 403) {
-          console.log('No tiene permisos de acceso');
-        }
-      }
+      (error) => {}
     );
   }
 
