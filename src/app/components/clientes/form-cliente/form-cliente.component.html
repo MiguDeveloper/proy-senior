@@ -176,6 +176,7 @@
                 <th scope="col">Descripcion</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Total</th>
+                <th scope="col">Detalle</th>
               </tr>
             </thead>
             <tbody>
@@ -184,6 +185,14 @@
                 <td>{{ factura.descripcion }}</td>
                 <td>{{ factura.createAt | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ factura.total }}</td>
+                <td>
+                  <!-- ver detalle-->
+                  <i
+                    class="fa fa-eye"
+                    (click)="openDialog(factura)"
+                    *ngIf="getPermisos('ROLE_USER')"
+                  ></i>
+                </td>
               </tr>
             </tbody>
           </table>

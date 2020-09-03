@@ -1,3 +1,5 @@
+import { DetalleFacturaComponent } from './../../facturas/detalle-factura/detalle-factura.component';
+import { Factura } from './../../../models/factura';
 import { AuthService } from './../../../services/auth.service';
 import { Region } from './../../../models/region';
 import { ModalService } from './../../../services/modal.service';
@@ -6,10 +8,13 @@ import { ClienteService } from './../../../services/cliente.service';
 import { Cliente } from './../../../models/cliente';
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
 import swal from 'sweetalert2';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 
 export interface DialogData {
   cliente: Cliente;
@@ -36,8 +41,8 @@ export class FormClienteComponent implements OnInit {
     private dialogRef: MatDialogRef<FormClienteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private modalService: ModalService,
-    private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -204,6 +209,19 @@ export class FormClienteComponent implements OnInit {
     } else {
       swal.fire('Error', 'Debe seleccionar un archivo', 'error');
     }
+  }
+
+  openDialog(factura: Factura) {
+    const dialogSettings = {
+      width: '900px',
+      autoFocus: false,
+      data: factura,
+    };
+
+    this.dialog
+      .open(DetalleFacturaComponent, dialogSettings)
+      .afterClosed()
+      .subscribe((rpta) => rpta);
   }
 
   getRegiones() {

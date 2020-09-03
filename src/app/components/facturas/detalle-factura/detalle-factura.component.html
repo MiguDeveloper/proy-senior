@@ -1,0 +1,30 @@
+<div class="alert alert-info mb-2" role="alert">FACTURA</div>
+<ul class="list-group mb-2">
+  <li class="list-group-item">Descripción: {{ data.descripcion }}</li>
+  <li class="list-group-item">Observación: {{ data.observacion }}</li>
+  <li class="list-group-item">
+    Fecha creación: {{ data.createAt | date: 'dd/MM/yyyy' }}
+  </li>
+</ul>
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Producto</th>
+      <th scope="col">Precio</th>
+      <th scope="col">Cantidad</th>
+      <th scope="col">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of data.items; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ item.producto.nombre }}</td>
+      <td>{{ item.producto.precio }}</td>
+      <td>{{ item.cantidad }}</td>
+      <td>{{ item.importe }}</td>
+    </tr>
+  </tbody>
+</table>
+<p class="text-right">TOTAL: {{ data.total }}</p>

@@ -18,6 +18,7 @@ import localeES from '@angular/common/locales/es';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
+import { DetalleFacturaComponent } from './components/facturas/detalle-factura/detalle-factura.component';
 
 registerLocaleData(localeES, 'es');
 
@@ -31,6 +32,7 @@ registerLocaleData(localeES, 'es');
     FormClienteComponent,
     PaginatorComponent,
     LoginComponent,
+    DetalleFacturaComponent,
   ],
   imports: [
     BrowserModule,
