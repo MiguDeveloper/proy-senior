@@ -176,7 +176,7 @@
                 <th scope="col">Descripcion</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Total</th>
-                <th scope="col">Detalle</th>
+                <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -188,9 +188,15 @@
                 <td>
                   <!-- ver detalle-->
                   <i
-                    class="fa fa-eye"
+                    class="fa fa-eye mr-1"
                     (click)="openDialog(factura)"
                     *ngIf="getPermisos('ROLE_USER')"
+                  ></i>
+                  <!-- Eliminar -->
+                  <i
+                    class="fa fa-trash-o"
+                    (click)="eliminarFactura(factura.id)"
+                    *ngIf="getPermisos('ROLE_ADMIN')"
                   ></i>
                 </td>
               </tr>

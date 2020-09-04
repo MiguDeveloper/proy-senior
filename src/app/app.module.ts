@@ -19,6 +19,7 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { DetalleFacturaComponent } from './components/facturas/detalle-factura/detalle-factura.component';
+import { FacturaComponent } from './components/facturas/factura/factura.component';
 
 registerLocaleData(localeES, 'es');
 
@@ -33,6 +34,7 @@ registerLocaleData(localeES, 'es');
     PaginatorComponent,
     LoginComponent,
     DetalleFacturaComponent,
+    FacturaComponent,
   ],
   imports: [
     BrowserModule,

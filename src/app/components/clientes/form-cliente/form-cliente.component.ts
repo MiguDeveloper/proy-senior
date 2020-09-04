@@ -1,3 +1,4 @@
+import { FacturaService } from './../../facturas/services/factura.service';
 import { DetalleFacturaComponent } from './../../facturas/detalle-factura/detalle-factura.component';
 import { Factura } from './../../../models/factura';
 import { AuthService } from './../../../services/auth.service';
@@ -42,7 +43,8 @@ export class FormClienteComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private modalService: ModalService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private facturaService: FacturaService
   ) {}
 
   ngOnInit(): void {
@@ -231,6 +233,33 @@ export class FormClienteComponent implements OnInit {
       },
       (error) => {}
     );
+  }
+
+  eliminarFactura(id: number) {
+    swal
+      .fire({
+        title: 'Está seguro?',
+        text: `Esta a punto de eliminar la factura ${id}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, eliminar!',
+      })
+      .then((result) => {
+        if (result.value) {
+          this.facturaService.deleteFactura(id).subscribe((rpta) => {
+            if (rpta.isSuccess) {
+              if (!rpta.isWarning) {
+                this.cliente.facturas = this.cliente.facturas.filter(
+                  (factura) => factura.id !== id
+                );
+                swal.fire('Eliminado', rpta.message, 'success');
+              }
+            }
+          });
+        }
+      });
   }
 
   closeDialog(estado: boolean) {

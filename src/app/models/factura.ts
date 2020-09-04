@@ -1,6 +1,6 @@
 import { Cliente } from './cliente';
 import { ItemFactura } from './item-factura';
-export interface Factura {
+export class Factura {
   id: number;
   descripcion: string;
   observacion: string;

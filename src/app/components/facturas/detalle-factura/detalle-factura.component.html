@@ -1,7 +1,16 @@
 <div class="alert alert-info mb-2" role="alert">FACTURA</div>
 <ul class="list-group mb-2">
+  <li class="list-group-item list-group-item-secondary">Datos del cliente</li>
+  <li class="list-group-item">Nombre: {{ factura?.cliente.nombre }}</li>
+  <li class="list-group-item">Apellido: {{ factura?.cliente.apellido }}</li>
+</ul>
+
+<ul class="list-group mb-2">
+  <li class="list-group-item list-group-item-secondary">Datos de factura</li>
   <li class="list-group-item">Descripción: {{ data.descripcion }}</li>
-  <li class="list-group-item">Observación: {{ data.observacion }}</li>
+  <li class="list-group-item">
+    Observación: {{ data.observacion ? data.observacion : 'Sin observaciones' }}
+  </li>
   <li class="list-group-item">
     Fecha creación: {{ data.createAt | date: 'dd/MM/yyyy' }}
   </li>
@@ -18,7 +27,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let item of data.items; let i = index">
+    <tr *ngFor="let item of factura?.items; let i = index">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ item.producto.nombre }}</td>
       <td>{{ item.producto.precio }}</td>

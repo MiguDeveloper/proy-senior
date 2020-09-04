@@ -90,10 +90,6 @@ export class ClientesComponent implements OnInit {
               }
             },
             (error) => {
-              if (error.status === 401 || error.status === 403) {
-                this.router.navigate(['/login']);
-                swal.fire('Error!', 'sin acceso al recurso', 'error');
-              }
               if (error.status === 404) {
                 swal.fire('Error!', error.error.message, 'error');
               }
