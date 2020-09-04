@@ -1,25 +1,24 @@
+import { DetalleFacturaComponent } from './components/facturas/detalle-factura/detalle-factura.component';
+import { FacturaComponent } from './components/facturas/factura/factura.component';
+import { MaterialModule } from './material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormClienteComponent } from './components/clientes/form-cliente/form-cliente.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { MaterialModule } from './material.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormClienteComponent } from './components/clientes/form-cliente/form-cliente.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
 import { PaginatorComponent } from './components/paginator/paginator.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
-import { DetalleFacturaComponent } from './components/facturas/detalle-factura/detalle-factura.component';
-import { FacturaComponent } from './components/facturas/factura/factura.component';
 
 registerLocaleData(localeES, 'es');
 
@@ -30,19 +29,19 @@ registerLocaleData(localeES, 'es');
     NavbarComponent,
     FooterComponent,
     HomeComponent,
-    FormClienteComponent,
     PaginatorComponent,
     LoginComponent,
-    DetalleFacturaComponent,
+    FormClienteComponent,
     FacturaComponent,
+    DetalleFacturaComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     MaterialModule,
+    AppRoutingModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
