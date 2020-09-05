@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [],
@@ -14,14 +15,16 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMomentDateModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule,
   ],
   exports: [
     MatDatepickerModule,
     MatMomentDateModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDialogModule
-  ]
+    MatDialogModule,
+    MatAutocompleteModule,
+  ],
 })
-export class MaterialModule { }
+export class MaterialModule {}

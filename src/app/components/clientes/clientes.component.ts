@@ -1,3 +1,4 @@
+import { FacturaComponent } from './../facturas/factura/factura.component';
 import { AuthService } from './../../services/auth.service';
 import { ModalService } from './../../services/modal.service';
 import { FormClienteComponent } from './form-cliente/form-cliente.component';
@@ -116,6 +117,23 @@ export class ClientesComponent implements OnInit {
       .subscribe((rpta) => {
         if (rpta?.isUpdate) {
           this.getClientes(0);
+        }
+      });
+  }
+
+  nuevaFactura(cliente: Cliente) {
+    const dialogSettings = {
+      width: '900px',
+      autoFocus: true,
+      data: cliente,
+    };
+
+    this.dialog
+      .open(FacturaComponent, dialogSettings)
+      .afterClosed()
+      .subscribe((rpta) => {
+        if (rpta) {
+          console.log(rpta);
         }
       });
   }

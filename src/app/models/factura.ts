@@ -6,6 +6,6 @@ export class Factura {
   observacion: string;
   createAt: string;
   cliente: Cliente;
-  items: ItemFactura[];
+  items: ItemFactura[] = [];
   total: number;
 }

@@ -65,6 +65,12 @@
                   (click)="openDialog(cliente, true)"
                   *ngIf="getPermisos('ROLE_ADMIN')"
                 ></i>
+                <!-- Nueva factura-->
+                <i
+                  class="fa fa-file-archive-o ml-1"
+                  (click)="nuevaFactura(cliente)"
+                  *ngIf="getPermisos('ROLE_ADMIN')"
+                ></i>
                 <!-- eliminar-->
                 <i
                   class="fa fa-trash-o ml-1"

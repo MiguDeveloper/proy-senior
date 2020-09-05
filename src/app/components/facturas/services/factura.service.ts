@@ -1,3 +1,4 @@
+import { ProductoResponse } from './../../../models/producto-response';
 import { FacturaResponse } from '../../../models/factura-response';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -17,5 +18,11 @@ export class FacturaService {
 
   deleteFactura(id: number): Observable<FacturaResponse> {
     return this.httpClient.delete<FacturaResponse>(`${this.urlEndpoint}/${id}`);
+  }
+
+  getFacturasPorTerminoBusqueda(termino: string): Observable<ProductoResponse> {
+    return this.httpClient.get<ProductoResponse>(
+      `${this.urlEndpoint}/filtrar-productos/${termino}`
+    );
   }
 }

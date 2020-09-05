@@ -6,6 +6,6 @@ export class ItemFactura {
   producto: Producto;
 
   calcularImporte() {
-    this.importe = this.cantidad * this.producto.precio;
+    return this.cantidad * this.producto.precio;
   }
 }
