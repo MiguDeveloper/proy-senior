@@ -1,38 +1,64 @@
 <div class="alert alert-info mb-2" role="alert">REGISTRAR FACTURA</div>
-<ul class="list-group mb-2">
-  <li class="list-group-item list-group-item-secondary">Datos del cliente</li>
-  <li class="list-group-item">Nombre: {{ factura?.cliente?.nombre }}</li>
-  <li class="list-group-item">Apellido: {{ factura?.cliente?.apellido }}</li>
-</ul>
+
+<div class="form-row">
+  <div class="form-group col-md-6 col-sm-12">
+    <label for="nombres">Nombres</label>
+    <input
+      type="text"
+      class="form-control form-control-sm"
+      id="nombres"
+      readonly
+      value="{{ factura?.cliente?.nombre }}"
+    />
+  </div>
+  <div class="form-group col-md-6 col-sm-12">
+    <label for="apellidos">Apellidos</label>
+    <input
+      type="text"
+      class="form-control form-control-sm"
+      id="apellidos"
+      readonly
+      value="{{ factura?.cliente?.apellido }}"
+    />
+  </div>
+</div>
 
 <form [formGroup]="facturaForm" autocomplete="off">
-  <div class="form-group">
-    <label>Descripción</label>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="descripcion"
-      [class.is-invalid]="validateFormControl('descripcion')"
-    />
-    <small
-      class="text-form text-danger"
-      *ngIf="validateFormControl('descripcion')"
-      >El campo es requerido</small
-    >
-  </div>
-  <div class="form-group">
-    <label>Observación</label>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="observacion"
-      [class.is-invalid]="validateFormControl('observacion')"
-    />
-    <small
-      class="text-form text-danger"
-      *ngIf="validateFormControl('observacion')"
-      >El campo es requerido</small
-    >
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Descripción</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="descripcion"
+          value="descripcion"
+          autofocus
+          [class.is-invalid]="validateFormControl('descripcion')"
+        />
+        <small
+          class="text-form text-danger"
+          *ngIf="validateFormControl('descripcion')"
+          >El campo es requerido</small
+        >
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Observación</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="observacion"
+          [class.is-invalid]="validateFormControl('observacion')"
+        />
+        <small
+          class="text-form text-danger"
+          *ngIf="validateFormControl('observacion')"
+          >El campo es requerido</small
+        >
+      </div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -60,24 +86,61 @@
     </mat-form-field>
   </div>
 
-  <table class="table">
+  <table class="table table-sm">
     <thead class="thead-light">
       <tr>
         <th scope="col">#</th>
         <th scope="col">Producto</th>
         <th scope="col">Precio</th>
         <th scope="col">Cantidad</th>
-        <th scope="col">Sub total</th>
+        <th scope="col">Importe</th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let item of factura?.items; let i = index">
+    <tbody formArrayName="items">
+      <tr
+        *ngFor="let item of detalle.controls; let i = index"
+        [formGroupName]="i"
+      >
         <th scope="row">{{ i + 1 }}</th>
-        <td>{{ item.producto.nombre }}</td>
-        <td>{{ item.producto.precio }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>{{ item.calcularImporte() }}</td>
+        <td>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            formControlName="producto"
+          />
+        </td>
+        <td>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            formControlName="precio"
+          />
+        </td>
+        <td>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            formControlName="cantidad"
+            (blur)="calcularImporte(i)"
+          />
+          <small
+            class="text-form text-danger"
+            *ngIf="item.get('cantidad').errors?.required"
+            >El campo es requerido</small
+          >
+        </td>
+        <td>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            formControlName="importe"
+          />
+        </td>
       </tr>
     </tbody>
   </table>
 </form>
+<p>{{ facturaForm.status }}</p>
+<pre>
+  {{ facturaForm.value | json }}
+</pre>

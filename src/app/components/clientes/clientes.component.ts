@@ -124,7 +124,7 @@ export class ClientesComponent implements OnInit {
   nuevaFactura(cliente: Cliente) {
     const dialogSettings = {
       width: '900px',
-      autoFocus: true,
+      autoFocus: false,
       data: cliente,
     };
 

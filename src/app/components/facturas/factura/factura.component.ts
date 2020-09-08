@@ -7,6 +7,7 @@ import {
   FormBuilder,
   Validators,
   FormControl,
+  FormArray,
 } from '@angular/forms';
 import { Cliente } from './../../../models/cliente';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -29,6 +30,11 @@ export class FacturaComponent implements OnInit {
   productosFiltrados: Observable<Producto[]>;
 
   facturaForm: FormGroup;
+  items: FormArray;
+
+  get detalle() {
+    return this.facturaForm.get('items') as FormArray;
+  }
 
   constructor(
     private clienteService: ClienteService,
@@ -69,8 +75,9 @@ export class FacturaComponent implements OnInit {
 
   crearFormulario() {
     this.facturaForm = this.fb.group({
-      descripcion: ['', Validators.required],
-      observacion: ['', Validators.required],
+      descripcion: [{ value: '', disabled: false }, Validators.required],
+      observacion: [{ value: '', disabled: false }, Validators.required],
+      items: this.fb.array([]),
     });
   }
 
@@ -88,12 +95,73 @@ export class FacturaComponent implements OnInit {
   productoSeleccionado(event: MatAutocompleteSelectedEvent) {
     const producto = event.option.value as Producto;
     const nuevoItem = new ItemFactura();
+    let cantidad = 0;
 
     nuevoItem.producto = producto;
 
-    this.factura.items.push(nuevoItem);
+    const isIndex = this.factura.items.findIndex((item) => {
+      if (item.producto.id === producto.id) {
+        ++item.cantidad;
+        cantidad = item.cantidad;
+        return true;
+      }
+    });
+
+    if (isIndex >= 0) {
+      (this.detalle.controls[isIndex] as FormArray).controls[
+        'cantidad'
+      ].setValue(cantidad);
+      //this.detalle.controls[isIndex].get().setValue(cantidad);
+      this.calcularImporte(isIndex);
+    } else {
+      this.factura.items.push(nuevoItem);
+      this.addItem(producto);
+    }
+
     this.productoInput.setValue('');
     event.option.focus();
     event.option.deselect();
+
+    console.log(this.factura);
+  }
+
+  createItem(producto: Producto): FormGroup {
+    return this.fb.group({
+      producto: [
+        { value: producto.nombre, disabled: true },
+        [Validators.required],
+      ],
+      precio: [
+        { value: producto.precio, disabled: true },
+        [Validators.required],
+      ],
+      cantidad: [1, [Validators.required]],
+      importe: [
+        { value: producto.precio, disabled: true },
+        [Validators.required],
+      ],
+    });
+  }
+
+  addItem(producto: Producto): void {
+    this.detalle.push(this.createItem(producto));
+  }
+
+  calcularImporte(idx: number) {
+    const precio = (this.detalle.controls[idx] as FormArray).controls['precio']
+      .value;
+    const { cantidad } = this.detalle.controls[idx].value;
+    if (!cantidad) {
+      return false;
+    }
+    const subtotal = Number.parseFloat(precio) * Number.parseFloat(cantidad);
+
+    (this.detalle.controls[idx] as FormArray).controls['importe'].setValue(
+      subtotal
+    );
+
+    // Actualizamos los items de las facturas
+    this.factura.items[idx].cantidad = Number.parseFloat(cantidad);
+    this.factura.items[idx].importe = subtotal;
   }
 }
