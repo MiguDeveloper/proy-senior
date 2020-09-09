@@ -155,6 +155,7 @@ export class FormClienteComponent implements OnInit {
       this.cliente.region = this.regiones.find(
         (region) => region.id === +this.clienteForm.get('region').value
       );
+      this.cliente.facturas = null;
       this.clienteService.putCliente(this.cliente).subscribe(
         (rpta) => {
           if (rpta.isSuccess) {

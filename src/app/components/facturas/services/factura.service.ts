@@ -1,3 +1,4 @@
+import { Factura } from './../../../models/factura';
 import { ProductoResponse } from './../../../models/producto-response';
 import { FacturaResponse } from '../../../models/factura-response';
 import { Observable } from 'rxjs';
@@ -24,5 +25,9 @@ export class FacturaService {
     return this.httpClient.get<ProductoResponse>(
       `${this.urlEndpoint}/filtrar-productos/${termino}`
     );
+  }
+
+  createFactura(factura: Factura): Observable<FacturaResponse> {
+    return this.httpClient.post<FacturaResponse>(this.urlEndpoint, factura);
   }
 }

@@ -133,7 +133,7 @@ export class ClientesComponent implements OnInit {
       .afterClosed()
       .subscribe((rpta) => {
         if (rpta) {
-          console.log(rpta);
+          this.getClientes(0);
         }
       });
   }

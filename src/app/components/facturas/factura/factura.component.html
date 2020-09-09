@@ -85,62 +85,83 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-
-  <table class="table table-sm">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Producto</th>
-        <th scope="col">Precio</th>
-        <th scope="col">Cantidad</th>
-        <th scope="col">Importe</th>
-      </tr>
-    </thead>
-    <tbody formArrayName="items">
-      <tr
-        *ngFor="let item of detalle.controls; let i = index"
-        [formGroupName]="i"
-      >
-        <th scope="row">{{ i + 1 }}</th>
-        <td>
-          <input
-            class="form-control form-control-sm"
-            type="text"
-            formControlName="producto"
-          />
-        </td>
-        <td>
-          <input
-            class="form-control form-control-sm"
-            type="text"
-            formControlName="precio"
-          />
-        </td>
-        <td>
-          <input
-            class="form-control form-control-sm"
-            type="text"
-            formControlName="cantidad"
-            (blur)="calcularImporte(i)"
-          />
-          <small
-            class="text-form text-danger"
-            *ngIf="item.get('cantidad').errors?.required"
-            >El campo es requerido</small
-          >
-        </td>
-        <td>
-          <input
-            class="form-control form-control-sm"
-            type="text"
-            formControlName="importe"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive-sm">
+    <table class="table table-sm">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col" class="text-right">Importe</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="items">
+        <tr
+          *ngFor="let item of detalle.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <th scope="row">{{ i + 1 }}</th>
+          <td>
+            <input
+              class="form-control form-control-sm"
+              type="text"
+              formControlName="producto"
+            />
+          </td>
+          <td>
+            <input
+              class="form-control form-control-sm"
+              type="text"
+              formControlName="precio"
+            />
+          </td>
+          <td>
+            <input
+              class="form-control form-control-sm"
+              type="number"
+              formControlName="cantidad"
+              (blur)="calcularImporte(i)"
+            />
+            <small
+              class="text-form text-danger"
+              *ngIf="item.get('cantidad').errors?.required"
+              >El campo es requerido</small
+            >
+          </td>
+          <td>
+            <input
+              class="form-control form-control-sm text-right"
+              type="text"
+              formControlName="importe"
+            />
+          </td>
+          <td>
+            <!-- eliminar-->
+            <i class="fa fa-trash-o ml-1" (click)="deleteItem(i)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </form>
-<p>{{ facturaForm.status }}</p>
-<pre>
-  {{ facturaForm.value | json }}
-</pre>
+
+<p class="text-right" *ngIf="factura?.items.length > 0">
+  Total: {{ calcularTotal() }}
+</p>
+
+<div class="text-right">
+  <button
+    type="button"
+    class="btn"
+    [ngClass]="{
+      'btn-primary': !facturaForm.invalid && factura.items.length > 0,
+      'btn-secondary': facturaForm.invalid || factura.items.length == 0
+    }"
+    [disabled]="facturaForm.invalid || factura.items.length == 0"
+    (click)="crearFactura()"
+  >
+    Registrar
+  </button>
+</div>
