@@ -11,13 +11,14 @@ import {
   HttpRequest,
   HttpEvent,
 } from '@angular/common/http';
+import { URL_BACKEND } from '../config/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
-  urlBase = 'http://localhost:8080/api/clientes';
-  urlRegiones = 'http://localhost:8080/api';
+  urlBase = `${URL_BACKEND}/api/clientes`; //'http://localhost:8080/api/clientes';
+  urlRegiones = `${URL_BACKEND}/api`; //'http://localhost:8080/api';
   // httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
   constructor(

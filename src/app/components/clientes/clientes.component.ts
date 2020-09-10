@@ -1,3 +1,4 @@
+import { URL_BACKEND } from './../../config/config';
 import { FacturaComponent } from './../facturas/factura/factura.component';
 import { AuthService } from './../../services/auth.service';
 import { ModalService } from './../../services/modal.service';
@@ -21,6 +22,7 @@ export class ClientesComponent implements OnInit {
   currentPage: number;
   isLast: boolean;
   isFirst: boolean;
+  urlBackend: string = URL_BACKEND;
 
   constructor(
     private clienteService: ClienteService,

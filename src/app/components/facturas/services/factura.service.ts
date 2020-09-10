@@ -1,3 +1,4 @@
+import { URL_BACKEND } from './../../../config/config';
 import { Factura } from './../../../models/factura';
 import { ProductoResponse } from './../../../models/producto-response';
 import { FacturaResponse } from '../../../models/factura-response';
@@ -9,7 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class FacturaService {
-  urlEndpoint = 'http://localhost:8080/api/facturas';
+  urlEndpoint = `${URL_BACKEND}/api/facturas`; //'http://localhost:8080/api/facturas';
 
   constructor(private httpClient: HttpClient) {}
 

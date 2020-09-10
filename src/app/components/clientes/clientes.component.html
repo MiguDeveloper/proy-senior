@@ -33,7 +33,7 @@
               <td *ngIf="getPermisos('ROLE_USER')">
                 <img
                   style="height: 50px; width: 50px"
-                  src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+                  src="{{ urlBackend }}/api/uploads/img/{{ cliente.foto }}"
                   alt="{{ cliente.nombre }}"
                   title="{{ cliente.nombre }}"
                   *ngIf="cliente.foto"
@@ -41,7 +41,7 @@
                 />
                 <img
                   style="height: 50px; width: 50px"
-                  src="http://localhost:8080/api/uploads/img/user-not-found.png"
+                  src="{{ urlBackend }}/api/uploads/img/user-not-found.png"
                   alt="{{ cliente.nombre }}"
                   title="{{ cliente.nombre }}"
                   *ngIf="!cliente.foto"
