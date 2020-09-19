@@ -20,7 +20,7 @@
         </ng-template>
         <ng-template #conFoto>
           <img
-            src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+            src="{{ urlBackend }}/api/uploads/img/{{ cliente.foto }}"
             class="img-fluid"
             [alt]="cliente.nombre"
           />

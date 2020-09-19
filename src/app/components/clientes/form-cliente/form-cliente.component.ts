@@ -1,3 +1,4 @@
+import { URL_BACKEND } from './../../../config/config';
 import { FacturaService } from './../../facturas/services/factura.service';
 import { DetalleFacturaComponent } from './../../facturas/detalle-factura/detalle-factura.component';
 import { Factura } from './../../../models/factura';
@@ -35,6 +36,7 @@ export class FormClienteComponent implements OnInit {
   private fotoSeleccionada: File;
   progreso = 0;
   regiones: Region[] = [];
+  urlBackend = URL_BACKEND;
 
   constructor(
     private fb: FormBuilder,
